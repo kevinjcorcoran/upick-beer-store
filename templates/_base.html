@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- from main.py -->
+		<title>{{page_title}}</title>
+		<!--yaml uses /s as static url-->
+		<link rel="stylesheet" href="/static/styles.css" />
+
+        <!--GOOGLE FONTS-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Corben&display=swap" rel="stylesheet">
+
+	</head>
+	<body>
+        <header class="header">
+            <!--TODO: Add Logo-->
+            <img class="logo" src="/static/UPickLogo.png" alt="UPick Logo">
+            <h1>UPick Beer Store</h1>
+            <nav>
+                <ul>
+                    <!--TODO: Implement Pages for each-->
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="beers.html">Beers</a></li>
+                    <li><a href="breweries.html">Breweries</a></li>
+                    <li><a href="styles.html">Styles</a></li>
+                    <li><a href="account.html">Account</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                </ul>
+            </nav>
+        </header>
+        <!--content from templates-->
+        {% block content %}{% endblock %}
+	</body>
+</html>

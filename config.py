@@ -1,0 +1,5 @@
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'Sugarplum8531'
+MYSQL_HOST = 'localhost'
+MYSQL_DB = 'beer_db'
+MYSQL_CURSORCLASS = 'DictCursor'
