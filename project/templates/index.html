@@ -1,0 +1,31 @@
+{% extends '_base.html' %} {% block content %}
+
+<div class="home">
+	<h2>Here's some breweries:</h2>
+	{% if brewery_data %}
+		<table>
+			<thead>
+				<th>Name</th>
+				<th>Street</th>
+				<th>City</th>
+				<th>State</th>
+				<th>Zip</th>
+			</thead>
+			<tbody>
+				{% for brewery in brewery_data %}
+					<tr>
+						<td>{{ brewery['brewery_name'] }}</td>
+						<td>{{ brewery['street'] }}</td>
+						<td>{{ brewery['city'] }}</td>
+						<td>{{ brewery['state'] }}</td>
+						<td>{{ brewery['zip'] }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>No breweries to list.</p>
+	{% endif %}
+</div>
+
+{% endblock %}

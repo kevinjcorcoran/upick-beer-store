@@ -1,0 +1,27 @@
+{% extends '_base.html' %} {% block content %}
+
+<div class="styles">
+	<h2>Styles:</h2>
+    {% if style_data %}
+        <table>
+            <thead>
+                <th>Style</th>
+                <th>Flavor</th>
+                <th>Color</th>
+            </thead>
+            <tbody>
+                {% for style in style_data %}
+                    <tr>
+                        <td>{{ style['style_name'] }}</td>
+                        <td>{{ style['flavor'] }}</td>
+                        <td>{{ style['color'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No styles to list.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+body {
+    font-family: 'Corben', monospace;
+    font-style: normal;
+    margin: 0px;
+}
+
+h1 {
+    font-size: 35px;
+    font-weight: bold;
+    color: rgb(236, 236, 236);
+    line-height: 30px;
+    height: 35px;
+    margin: 0px;
+    display: flex;
+    flex-grow: 3;
+}
+
+h2 {
+    font-weight: bold;
+    margin: 0px 0px 10px 0px;
+}
+
+h3 {
+    margin: 0px
+}
+
+p {
+    margin: 0px;
+}
+
+nav {
+    flex-grow: 1;
+    display: flex;
+}
+
+table {
+    border: 1px solid;
+    border-collapse: collapse;
+    width:100%;
+    table-layout: auto;
+}
+
+th, td {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 0px 10px 0px 10px;
+}
+
+.logo {
+    max-width: 3%;
+    max-height: 3%;
+    padding-right: 20px;
+}
+
+.header {
+    background-color:rgb(25, 25, 25);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 5px 30px 5px 20px;
+}
+
+.header ul {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    list-style: none;
+    flex-grow: 1;
+    
+}
+
+.header a {
+    font-size: 16px;
+    font-weight: normal;
+    color: rgb(236, 236, 236);
+    text-decoration: none;
+    line-height: 24px;
+    text-align: left;
+    color: #FFFFFF;
+}
+
+.app-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 10px 40px 10px 40px;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    border-style: solid;
+    border-color: rgb(167, 167, 167);
+    border-radius: 10px;
+    padding: 5px;
+    width: 300px;
+}
+
+.input-item {
+    width: 100%;
+    box-sizing: border-box;
+}
