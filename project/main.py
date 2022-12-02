@@ -6,7 +6,7 @@ from datetime import datetime
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
 
-from utilities import execute_query
+from .utilities import execute_query
 
 # Primary Directories
 basePath = os.path.abspath(os.path.dirname(__file__))
