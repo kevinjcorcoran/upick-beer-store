@@ -1,30 +1,61 @@
 {% extends '_base.html' %} {% block content %}
 
 <div class="home">
-	<h2>Here's some breweries:</h2>
-	{% if brewery_data %}
+	{% if session.get('loggedin') %}
+		<h2>Welcome back, {{ session['name'] }}</h2>
+	{% endif %}
+
+	{% if popular_beers %}
+		<h2>Most popular beers:</h2>
 		<table>
 			<thead>
-				<th>Name</th>
-				<th>Street</th>
-				<th>City</th>
-				<th>State</th>
-				<th>Zip</th>
+				<th>Beer</th>
+				<th>Likes</th>
 			</thead>
 			<tbody>
-				{% for brewery in brewery_data %}
+				{% for beer in popular_beers %}
 					<tr>
-						<td>{{ brewery['brewery_name'] }}</td>
-						<td>{{ brewery['street'] }}</td>
-						<td>{{ brewery['city'] }}</td>
-						<td>{{ brewery['state'] }}</td>
-						<td>{{ brewery['zip'] }}</td>
+						<td>{{ beer['Beer'] }}</td>
+						<td>{{ beer['Likes'] }}</td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 	{% else %}
-		<p>No breweries to list.</p>
+		<p>No beers to list.</p>
+	{% endif %}
+
+	{% if suggestions %}
+		<h2>Beers you might like:</h2>
+		<table>
+			<thead>
+				<th>Name</th>
+                <th>Style</th>
+                <th>ABV</th>
+                <th>IBU</th>
+                <th>Stock</th>
+                <th>Price</th>
+			</thead>
+			<tbody>
+				{% for beer in suggestions %}
+				<form method="POST", action="/like">
+                    <tr>
+                        <td>{{ beer['beer_name'] }}</td>
+                        <td>{{ beer['style'] }}</td>
+                        <td>{{ beer['abv'] }}</td>
+                        <td>{{ beer['ibu'] }}</td>
+                        <td>{{ beer['stock'] }}</td>
+                        <td>{{ beer['price'] }}</td>
+                        <td>
+                            <button type="submit" formaction="/like">Like</button>
+                            <button type="submit" formaction="/add_to_cart">Add to Cart</button>
+                        </td>
+                        <input type='hidden' name='beer_upc' value="{{ beer['upc'] }}">
+                    </tr>
+                </form>
+				{% endfor %}
+			</tbody>
+		</table>
 	{% endif %}
 </div>
 

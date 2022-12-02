@@ -36,9 +36,24 @@ def index():
     with open(beer_file, encoding='utf-8') as beers:
         execute_query(beers.read())
     
-    brewery_data = execute_query('SELECT * FROM Brewery')
+    popular_beers = execute_query(
+        f"SELECT Beer.beer_name as Beer, count(*) as Likes "
+        f"FROM likes, Beer "
+        f"WHERE likes.beer_upc = Beer.upc "
+        f"GROUP BY Beer.beer_name "
+        f"ORDER BY Likes DESC"
+    )
 
-    return render_template('index.html', page_title='Home', brewery_data=brewery_data)
+    if session.get('loggedin'):
+        favorite_style = execute_query(f"SELECT favorite_style FROM Customer WHERE Customer.email = '{session['email']}'", True)['favorite_style']
+        suggestions = execute_query(
+            f"SELECT * FROM Beer WHERE Beer.style = '{favorite_style}'"
+        )
+        print(suggestions, sys.stderr)
+    else:
+        suggestions = None
+
+    return render_template('index.html', page_title='Home', popular_beers=popular_beers, suggestions=suggestions)
 
 
 @main.route('/beers.html')
@@ -76,7 +91,7 @@ def styles():
 def account():
     '''If a user is logged in, query their data to display on the screen. Otherwise redirect to login.'''
     if session.get('loggedin'):
-        user = execute_query(f"SELECT * FROM Customer WHERE email ='{session['id']}'", True)
+        user = execute_query(f"SELECT * FROM Customer WHERE email ='{session.get('email')}'", True)
         liked_beers = execute_query(f"SELECT Beer.beer_name FROM Beer, likes WHERE Beer.upc = likes.beer_upc AND likes.customer_email = '{session.get('email')}'")
         return render_template('account.html', page_title='Account', name=session['username'], user=user, liked_beers=liked_beers)
 
@@ -89,7 +104,7 @@ def like():
 
     liked_beer = request.form.get('beer_upc')
     if session.get('loggedin'):
-        execute_query(f"INSERT INTO likes VALUES('{session.get('email')}', '{liked_beer}')")
+        execute_query(f"INSERT IGNORE INTO likes VALUES('{session.get('email')}', '{liked_beer}')")
         return redirect(url_for('main.account'))
 
     return redirect(url_for('auth.login'))
@@ -100,7 +115,7 @@ def add_to_cart():
     '''Process an add to cart request if the user is logged in. Otherwise redirect to login.'''
 
     item = request.form.get('beer_upc')
-    price = int(execute_query(f"SELECT price FROM Beer WHERE upc = {item}", True)['price'])
+    price = execute_query(f"SELECT price FROM Beer WHERE upc = {item}", True)['price']
 
     if session.get('loggedin'):
         cart_id = execute_query(f"SELECT id FROM Purchase WHERE closed = 0 AND customer_email = '{session['email']}'", True)
@@ -115,9 +130,9 @@ def add_to_cart():
         if not curr_quantity:
             execute_query(f"INSERT INTO Purchase_Item VALUES('{cart_id}', {item}, 1)")
         else:
-            execute_query(f"UPDATE Purchase_Item SET quantity = quantity + 1")
+            execute_query(f"UPDATE Purchase_Item SET quantity = quantity + 1 WHERE Purchase_Item.purchase_id = '{cart_id}'")
         
-        execute_query(f"UPDATE Purchase SET total = total + {price}")
+        execute_query(f"UPDATE Purchase SET total = total + {price} WHERE Purchase.id = '{cart_id}'")
 
         return redirect(url_for('main.cart'))
 
@@ -127,6 +142,7 @@ def add_to_cart():
 @main.route('/cart.html')
 def cart():
     '''Query the user's cart and items if they are logged in. Otherwise redirect to login.'''
+
     if session.get('loggedin'):
         cart = execute_query(f"SELECT * FROM Purchase WHERE closed = 0 AND customer_email = '{session['email']}'", True)
         if not cart:
@@ -142,7 +158,9 @@ def cart():
             f"FROM Beer B, Purchase_Item P "
             f"WHERE P.purchase_id = '{cart_id}' AND B.upc = P.beer_upc"
         )
-        print(cart_items, sys.stderr) if cart_items else print("WTF", sys.stderr)
         total = cart['total']
+        size = 0
+        for item in cart_items:
+            size += item['quantity']
 
-    return render_template('cart.html', page_title='Cart', cart_items=cart_items, total=total)
+    return render_template('cart.html', page_title='Cart', cart_items=cart_items, total=total, size=size)
