@@ -1,8 +1,17 @@
 {% extends '_base.html' %} {% block content %}
 
-<h2>Welcome, {{name}}!</h2>
+<h2>Welcome, {{ user['first_name']}}!</h2>
 <h3>Account info:</h3>
 <p>Email: {{ user['email']}}</p>
 <p>Favorite Style: {{ user['favorite_style'] }}</p>
+<h3>Liked Beers:</h3>
+{% for beer in liked_beers %}
+    <p>{{ beer['beer_name'] }}</p>
+{% else %}
+    <p>You haven't liked any beers yet!</p>
+{% endfor %}    
+<form method="POST" action="/logout">
+    <button>Logout</button>
+</form>
 
 {% endblock %}

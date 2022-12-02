@@ -1,19 +1,23 @@
 import sys
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
-from . import mysql, execute_query
-from werkzeug.security import generate_password_hash, check_password_hash
 
+from flask import (Blueprint, flash, redirect, render_template, request,
+                   session, url_for)
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from . import execute_query
 
 auth = Blueprint('auth', __name__)
 
 
 @auth.route('/login')
 def login():
+    '''Display the login page.'''
     return render_template('login.html', page_title='Login')
 
 
 @auth.route('/login', methods=['POST'])
 def login_post():
+    '''Send a login request to the DB and logs the user into the current session.'''
     email = request.form.get('email')
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
@@ -26,22 +30,23 @@ def login_post():
         return redirect(url_for('auth.login'))
 
     session['loggedin'] = True
-    session['id'] = user['email']
-    session['username'] = user['first_name']
+    session['email'] = user['email']
+    session['name'] = user['first_name']
 
     return redirect(url_for('main.account'))
 
 
 @auth.route('/signup')
 def signup():
-    styles = execute_query('SELECT style_name FROM Style')
+    '''Show sign up page. Sends styles for list of favorite style to choose from.'''
 
+    styles = execute_query('SELECT style_name FROM Style')
     return render_template('signup.html', page_title='Signup', styles=styles)
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup_post():
-    cursor = mysql.connection.cursor()
+    '''Process the signup form. Checks if the email is already used and hashes their password.'''
 
     email = request.form.get('email')
     password = request.form.get('password')
@@ -65,6 +70,13 @@ def signup_post():
 
     return redirect(url_for('auth.login'))
 
-@auth.route('/logout')
+
+@auth.route('/logout', methods=['GET', 'POST'])
 def logout():
-    return 'Logout'
+    '''Log out the current user.'''
+
+    session.pop('loggedin', None)
+    session.pop('email')
+    session.pop('name')
+
+    return redirect(url_for('auth.login'))

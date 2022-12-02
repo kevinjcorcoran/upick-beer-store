@@ -14,6 +14,7 @@
             </thead>
             <tbody>
                 {% for beer in beer_data %}
+                <form method="POST", action="/like">
                     <tr>
                         <td>{{ beer['beer_name'] }}</td>
                         <td>{{ beer['style'] }}</td>
@@ -21,8 +22,13 @@
                         <td>{{ beer['ibu'] }}</td>
                         <td>{{ beer['stock'] }}</td>
                         <td>{{ beer['price'] }}</td>
-                        <td><button>Like</button></td>
+                        <td>
+                            <button type="submit" formaction="/like">Like</button>
+                            <button type="submit" formaction="/add_to_cart">Add to Cart</button>
+                        </td>
+                        <input type='hidden' name='beer_upc' value="{{ beer['upc'] }}">
                     </tr>
+                </form>
                 {% endfor %}
             </tbody>
         </table>

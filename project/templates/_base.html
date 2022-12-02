@@ -15,18 +15,20 @@
 	</head>
 	<body>
         <header class="header">
-            <!--TODO: Add Logo-->
             <img class="logo" src="/static/UPickLogo.png" alt="UPick Logo">
             <h1>UPick Beer Store</h1>
             <nav>
                 <ul>
-                    <!--TODO: Implement Pages for each-->
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
                     <li><a href="{{ url_for('main.beers') }}">Beers</a></li>
                     <li><a href="{{ url_for('main.breweries') }}">Breweries</a></li>
                     <li><a href="{{ url_for('main.styles') }}">Styles</a></li>
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
+                    {% if not session.get('loggedin') %}
+                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                        <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('main.account') }}">Account</a></li>
+                    {% endif %}
                     <li><a href="cart.html">Cart</a></li>
                 </ul>
             </nav>

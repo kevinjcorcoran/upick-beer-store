@@ -1,7 +1,29 @@
 {% extends '_base.html' %} {% block content %}
 
-<!--TODO-->
-<h2>Cart Page Under Construction</h2>
-
+<h2>Cart:</h2>
+{% if cart_items %}
+    <table>
+        <thead>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+                <tr>
+                    <td>{{ item['name'] }}</td>
+                    <td>{{ item['quantity'] }}</td>
+                    <td>{{ item['item_total'] }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td colspan="2">TOTAL</td>
+                    <td>{{ total }}</td>
+                </tr>
+        </tbody>
+    </table>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
 
 {% endblock %}

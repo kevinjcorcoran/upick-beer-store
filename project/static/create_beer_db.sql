@@ -51,23 +51,24 @@ CREATE TABLE IF NOT EXISTS Customer(
 );
 
 CREATE TABLE IF NOT EXISTS Purchase(
-	id INTEGER,
+	id CHAR(36),
     customer_email VARCHAR(320) NOT NULL,
-    closed_date DATETIME,
+	closed BIT DEFAULT 0,
+    last_edit DATETIME,
     total DECIMAL(18,2),
     PRIMARY KEY(id),
     FOREIGN KEY(customer_email) REFERENCES Customer(email) ON DELETE CASCADE ON UPDATE CASCADE,
-    CHECK(id>=0 AND total>=0 AND id>=0)
+    CHECK(total>=0)
 );
 
 CREATE TABLE IF NOT EXISTS Purchase_Item(
-	purchase_id INTEGER,
+	purchase_id CHAR(36),
     beer_upc NUMERIC(12),
     quantity INTEGER NOT NULL,
     PRIMARY KEY(purchase_id, beer_upc),
     FOREIGN KEY (purchase_id) REFERENCES Purchase(id) ON DELETE CASCADE,
     FOREIGN KEY(beer_upc) REFERENCES Beer(upc) ON DELETE CASCADE,
-    CHECK(purchase_id>=0 AND beer_upc>=0 AND quantity>=0)
+    CHECK(beer_upc>=0 AND quantity>=0)
 );
 
 CREATE TABLE IF NOT EXISTS likes(
