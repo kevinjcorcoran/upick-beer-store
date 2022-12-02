@@ -4,7 +4,7 @@ from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from utilities import execute_query
+from .utilities import execute_query
 
 auth = Blueprint('auth', __name__)
 
@@ -20,8 +20,6 @@ def login_post():
     '''Send a login request to the DB and logs the user into the current session.'''
     email = request.form.get('email')
     password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
-
 
     user = execute_query(f'SELECT * FROM Customer WHERE email = "{email}"', True)
 
