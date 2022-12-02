@@ -16,11 +16,15 @@ def login():
 @auth.route('/login', methods=['POST'])
 def login_post():
     '''Send a login request to the DB and logs the user into the current session.'''
+
     email = request.form.get('email')
     password = request.form.get('password')
 
-    user = execute_query(f'SELECT * FROM Customer WHERE email = "{email}"', True)
-
+    user = execute_query(
+        f"SELECT * "
+        f"FROM Customer "
+        f"WHERE email = '{email}'", True
+    )
     if not user or not check_password_hash(user['password'], password):
         flash('Incorrect email or password.')
         return redirect(url_for('auth.login'))
@@ -35,15 +39,17 @@ def login_post():
 @auth.route('/signup')
 def signup():
     '''Show sign up page. Sends styles for list of favorite style to choose from.'''
+    styles = execute_query(
+        'SELECT style_name '
+        'FROM Style'
+    )
 
-    styles = execute_query('SELECT style_name FROM Style')
     return render_template('signup.html', page_title='Signup', styles=styles)
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup_post():
     '''Process the signup form. Checks if the email is already used and hashes their password.'''
-
     email = request.form.get('email')
     password = request.form.get('password')
     first_name = request.form.get('first_name')
@@ -54,15 +60,24 @@ def signup_post():
     zip_code = request.form.get('zip')
     favorite_style = request.form.get('favorite_style')
 
-    user = execute_query(f'SELECT * FROM Customer WHERE email = "{email}"', True)
+    user = execute_query(
+        f"SELECT * "
+        f"FROM Customer "
+        f"WHERE email = '{email}'", True
+    )
 
     if user:
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
     hashed_password = generate_password_hash(password, method='sha256')
-    insert = f'INSERT INTO Customer VALUES("{email}", "{hashed_password}", "{first_name}", "{last_name}", "{street}", "{city}", "{state}", {zip_code}, "{favorite_style}")'
-    execute_query(insert)
+    execute_query(
+        f'INSERT INTO Customer VALUES( '
+        f'"{email}", "{hashed_password}", '
+        f'"{first_name}", "{last_name}", '
+        f'"{street}", "{city}", "{state}", {zip_code}, '
+        f'"{favorite_style}")'
+    )
 
     return redirect(url_for('auth.login'))
 
@@ -70,7 +85,6 @@ def signup_post():
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     '''Log out the current user.'''
-
     session.pop('loggedin', None)
     session.pop('email')
     session.pop('name')
