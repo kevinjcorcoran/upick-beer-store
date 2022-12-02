@@ -1,5 +1,4 @@
 import os
-import sys
 import uuid
 from datetime import datetime
 
@@ -49,7 +48,6 @@ def index():
         suggestions = execute_query(
             f"SELECT * FROM Beer WHERE Beer.style = '{favorite_style}'"
         )
-        print(suggestions, sys.stderr)
     else:
         suggestions = None
 

@@ -11,11 +11,19 @@ mysql = MySQL()
 def create_app():
     app = Flask(__name__, template_folder=template_dir)
 
+    # PythonAnywhere Settings
+    #app.config['MYSQL_USER'] = 'kevinjcorcoran'
+    #app.config['MYSQL_PASSWORD'] = 'upick-beer-store'
+    #app.config['MYSQL_HOST'] = 'kevinjcorcoran.mysql.pythonanywhere-services.com'
+    #app.config['MYSQL_DB'] = 'kevinjcorcoran$beer_db'
+
+    # Local Settings
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = ''
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_DB'] = 'beer_db'
+
     app.config['SECRET_KEY'] = 'upick'
-    app.config['MYSQL_USER'] = 'kevinjcorcoran'
-    app.config['MYSQL_PASSWORD'] = 'upick-beer-store'
-    app.config['MYSQL_HOST'] = 'kevinjcorcoran.mysql.pythonanywhere-services.com'
-    app.config['MYSQL_DB'] = 'kevinjcorcoran$beer_db'
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
     mysql.init_app(app)
