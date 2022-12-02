@@ -4,7 +4,7 @@ from flask import (Blueprint, flash, redirect, render_template, request,
                    session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .utilities import execute_query
+from utilities import execute_query
 
 auth = Blueprint('auth', __name__)
 

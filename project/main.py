@@ -6,7 +6,7 @@ from datetime import datetime
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
 
-from .utilities import execute_query
+from utilities import execute_query
 
 # Primary Directories
 basePath = os.path.abspath(os.path.dirname(__file__))
@@ -23,7 +23,7 @@ main = Blueprint('main', __name__)
 
 
 @main.route('/')
-@main.route('/index.html', methods=['GET', 'POST']) 
+@main.route('/index.html', methods=['GET', 'POST'])
 def index():
     '''Create and populate the tables if they don't exist. Query all breweries to show on home page.'''
 
@@ -35,7 +35,7 @@ def index():
         execute_query(styles.read())
     with open(beer_file, encoding='utf-8') as beers:
         execute_query(beers.read())
-    
+
     popular_beers = execute_query(
         f"SELECT Beer.beer_name as Beer, count(*) as Likes "
         f"FROM likes, Beer "
@@ -93,7 +93,7 @@ def account():
     if session.get('loggedin'):
         user = execute_query(f"SELECT * FROM Customer WHERE email ='{session.get('email')}'", True)
         liked_beers = execute_query(f"SELECT Beer.beer_name FROM Beer, likes WHERE Beer.upc = likes.beer_upc AND likes.customer_email = '{session.get('email')}'")
-        return render_template('account.html', page_title='Account', name=session['username'], user=user, liked_beers=liked_beers)
+        return render_template('account.html', page_title='Account', name=session['name'], user=user, liked_beers=liked_beers)
 
     return redirect(url_for('auth.login'))
 
@@ -125,13 +125,13 @@ def add_to_cart():
             execute_query(f"INSERT INTO Purchase VALUES('{cart_id}', '{session.get('email')}', 0, '{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}', 0)")
         else:
             cart_id = cart_id['id']
-        
+
         curr_quantity = execute_query(f"SELECT quantity FROM Purchase_Item WHERE purchase_id = '{cart_id}' AND beer_upc = {item}")
         if not curr_quantity:
             execute_query(f"INSERT INTO Purchase_Item VALUES('{cart_id}', {item}, 1)")
         else:
             execute_query(f"UPDATE Purchase_Item SET quantity = quantity + 1 WHERE Purchase_Item.purchase_id = '{cart_id}'")
-        
+
         execute_query(f"UPDATE Purchase SET total = total + {price} WHERE Purchase.id = '{cart_id}'")
 
         return redirect(url_for('main.cart'))
@@ -163,4 +163,5 @@ def cart():
         for item in cart_items:
             size += item['quantity']
 
-    return render_template('cart.html', page_title='Cart', cart_items=cart_items, total=total, size=size)
+        return render_template('cart.html', page_title='Cart', cart_items=cart_items, total=total, size=size)
+    return redirect(url_for('auth.login'))

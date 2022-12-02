@@ -1,4 +1,4 @@
-from . import mysql
+from __init__ import mysql
 
 def execute_query(query, one=False):
     cursor = mysql.connection.cursor()
