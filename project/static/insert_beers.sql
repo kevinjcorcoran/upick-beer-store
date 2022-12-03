@@ -157,47 +157,89 @@ VALUES(
 	5.00
 );
 
+INSERT IGNORE INTO Beer
+VALUES(
+	164798321056,
+	'Buffy',
+	12345677,
+	'India Pale Ale',
+	5.2,
+	33,
+	40,
+	5.50
+);
 
+INSERT IGNORE INTO Beer
+VALUES(
+	168972643061,
+	'Hell''s Delight',
+	12345677,
+	'Lager',
+	4.5,
+	8,
+	10,
+	4.75
+);
 
+INSERT IGNORE INTO Beer
+VALUES(
+	948751036492,
+	'Hop Juju',
+	12345679,
+	'India Pale Ale',
+	9.0,
+	100,
+	85,
+	6.25
+);
 
+INSERT IGNORE INTO Beer
+VALUES(
+	618460325978,
+	'Sunshine Daydream',
+	12345679,
+	'India Pale Ale',
+	4.9,
+	50,
+	100,
+	5.00
+);
 
+INSERT IGNORE INTO Beer
+VALUES(
+	506791563047,
+	'Nu Haze',
+	12345680,
+	'India Pale Ale',
+	6.0,
+	19,
+	50,
+	5.50
+);
 
+INSERT IGNORE INTO Beer
+VALUES(
+	604795305992,
+	'8 Days a Week',
+	12345680,
+	'Blonde Ale',
+	4.8,
+	15,
+	25,
+	4.75
+);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Example DDL for Beer
+/*
+INSERT IGNORE INTO Beer
+VALUES(
+	604795305992, -- 12 digit product code
+	'8 Days a Week', -- Beer name
+	12345680, -- Brewery ID (from Brewery)
+	'Blonde Ale', -- Style (From Style)
+	4.8, -- Alcohol by volume (ABV)
+	15, -- International Bitterness Units (IBU)
+	25, -- Amount in stock
+	4.75 -- Price
+);
+*/

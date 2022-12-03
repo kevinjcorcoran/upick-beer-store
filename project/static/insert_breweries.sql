@@ -98,15 +98,35 @@ VALUES(
 	80524
 );
 
+INSERT IGNORE INTO Brewery
+VALUES(
+	12345677,
+	'Helltown Brewing',
+	'5578 Old William Penn Hwy',
+	'Export',
+	'PA',
+	15632
+);
 
+INSERT IGNORE INTO Brewery
+VALUES(
+	12345680,
+	'Souther Tier Brewing Company',
+	'316 N Shore Dr',
+	'Pittsburgh',
+	'PA',
+	15212
+);
 
-
-
-
-
-
-
-
-
-
-
+-- Example DDL for Brewery
+/*
+INSERT IGNORE INTO Brewery
+VALUES(
+	12345681, -- Brewery ID
+	'Souther Tier Brewing Company', -- Brewery name
+	'316 N Shore Dr', -- Street
+	'Pittsburgh', -- City
+	'PA', -- State Abbreviation
+	15212 -- Zip code
+);
+*/

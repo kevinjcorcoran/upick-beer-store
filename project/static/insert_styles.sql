@@ -55,13 +55,11 @@ INSERT IGNORE INTO Style VALUES(
 	'Golden Yellow'
 );
 
-
-
-
-
-
-
-
-
-
-
+-- Example DDL for Style
+/*
+INSERT IGNORE INTO Style VALUES(
+	'Edelweiss', -- Style name
+	'Fruity', -- Flavor
+	'Golden Yellow' -- Color
+);
+*/
