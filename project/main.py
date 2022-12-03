@@ -291,7 +291,7 @@ def checkout():
             stock = execute_query(
                 f"SELECT stock "
                 f"FROM Beer "
-                f"WHERE upc = {item.get('upc')}"
+                f"WHERE upc = {item.get('upc')}", True
             )['stock']
             flash(f"Too many {item.get('name')} in cart. Only {stock} in stock.")
 

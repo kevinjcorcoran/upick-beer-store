@@ -6,6 +6,7 @@
         <table>
             <thead>
                 <th>Name</th>
+                <th>Brewery</th>
                 <th>Style</th>
                 <th>ABV</th>
                 <th>IBU</th>
@@ -17,6 +18,7 @@
                 <form method="POST" action="/like">
                     <tr>
                         <td>{{ beer['beer_name'] }}</td>
+                        <td>{{ beer['brewery_name'] }}</td>
                         <td>{{ beer['style'] }}</td>
                         <td>{{ beer['abv'] }}%</td>
                         <td>{{ beer['ibu'] }}</td>
