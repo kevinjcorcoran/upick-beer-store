@@ -40,12 +40,14 @@ table {
 }
 
 td {
+    vertical-align: top;
     text-align: left;
     border-collapse: collapse;
     padding: 0px 15px 5px 15px;
 }
 
 th {
+    vertical-align: top;
     font-size: 18px;
     font-weight: bold;
     text-align: left;
