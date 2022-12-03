@@ -21,7 +21,15 @@
                 {% for item in cart_items %}
                     <tr>
                         <td>{{ item['name'] }}</td>
-                        <td>{{ item['quantity'] }}</td>
+                        <td>
+                            <input type='hidden' name='beer_upc' value="{{ item['upc'] }}">
+                            <input type='hidden' name='purchase_id' value="{{ item['purchase_id'] }}">
+                            <input type='hidden' name='beer_price' value="{{ item['beer_price'] }}">
+                            <input type='hidden' name='quantity' value="{{ item['quantity'] }}">
+                            <button type='submit' formaction="/dec_quantity">-</button>
+                            {{ item['quantity'] }}
+                            <button type='submit' formaction="/inc_quantity">+</button>
+                        </td>
                         <td>${{ item['item_total'] }}</td>
                     </tr>
                 {% endfor %}

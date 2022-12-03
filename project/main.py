@@ -117,7 +117,8 @@ def account():
             f"SELECT * "
             f"FROM Purchase "
             f"WHERE customer_email = '{customer_email}' "
-            F"AND closed = 1"
+            f"AND closed = 1 "
+            f"ORDER BY last_edit DESC"
         )
         return render_template(
             'account.html', page_title='Account',
@@ -237,7 +238,8 @@ def cart():
                 f"P.quantity AS 'quantity', "
                 f"B.price * P.quantity AS 'item_total', "
                 f"P.purchase_id AS 'purchase_id', "
-                f"B.upc AS 'upc' "
+                f"B.upc AS 'upc' ,"
+                f"B.price AS 'beer_price' "
             f"FROM Beer B, Purchase_Item P "
             f"WHERE P.purchase_id = '{cart_id}' "
             f"AND B.upc = P.beer_upc"
@@ -257,8 +259,7 @@ def cart():
 
 @main.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    '''Query the user's cart and items if they are logged in. 
-    Otherwise redirect to login.'''
+    '''Query the user's cart and items, remove them from the stock, and close the purchase'''
     customer_email = session.get('email')
     cart = execute_query(
         f"SELECT * "
@@ -266,23 +267,8 @@ def checkout():
         f"WHERE closed = 0 "
         f"AND customer_email = '{customer_email}'", True
     )
-    if not cart:
-        # Crete a new cart if the user doesn't have one open
-        cart_id = uuid.uuid1()
-        execute_query(
-            f"INSERT INTO Purchase VALUES("
-            f"'{cart_id}', '{customer_email}', 0, "
-            f"'{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}', 0)"
-        )
-        cart = execute_query(
-            f"SELECT * "
-            f"FROM Purchase "
-            f"WHERE closed = 0 "
-            f"AND customer_email = '{customer_email}'", True
-        )
 
     cart_id = cart['id']
-    total = cart['total']
     cart_items = execute_query(
         f"SELECT B.beer_name AS 'name', "
             f"P.quantity AS 'quantity', "
@@ -322,3 +308,58 @@ def checkout():
         'confirmation.html', message='Thanks for your order!',
          sub_message=f'Order Number: {cart_id}'
     )
+
+
+@main.route('/inc_quantity', methods=['GET', 'POST'])
+def inc_quantity():
+    '''Increase the quantity of an item in the cart.'''
+    beer_upc = request.form.get('beer_upc')
+    purchase_id = request.form.get('purchase_id')
+    beer_price = request.form.get('beer_price')
+    execute_query(
+        f"UPDATE Purchase_Item "
+        f"SET quantity = quantity + 1 "
+        f"WHERE purchase_id = '{purchase_id}' "
+        f"AND beer_upc = {beer_upc}"
+    )
+    execute_query(
+        f"UPDATE Purchase "
+        f"SET total = total + {beer_price} "
+        f"WHERE id = '{purchase_id}'"
+    )
+
+    return redirect(url_for('main.cart'))
+
+
+@main.route('/dec_quantity', methods=['GET', 'POST'])
+def dec_quantity():
+    '''Increase the quantity of an item in the cart.'''
+    beer_upc = request.form.get('beer_upc')
+    purchase_id = request.form.get('purchase_id')
+    beer_price = request.form.get('beer_price')
+    quantity = request.form.get('quantity')
+
+    if int(quantity) > 1:
+        try:
+            execute_query(
+                f"UPDATE Purchase_Item "
+                f"SET quantity = quantity - 1 "
+                f"WHERE purchase_id = '{purchase_id}' "
+                f"AND beer_upc = {beer_upc}"
+            )
+
+            execute_query(
+                f"UPDATE Purchase "
+                f"SET total = total - {beer_price} "
+                f"WHERE id = '{purchase_id}'"
+            )
+        except:
+            return redirect(url_for('main.cart'))
+    else:
+        execute_query(
+            f"DELETE FROM Purchase_Item "
+            f"WHERE purchase_id = '{purchase_id}' "
+            f"AND beer_upc = {beer_upc}"
+        )
+
+    return redirect(url_for('main.cart'))
