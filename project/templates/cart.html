@@ -1,28 +1,39 @@
 {% extends '_base.html' %} {% block content %}
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div>
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+
 <h2>Cart:</h2>
 {% if cart_items %}
-    <table>
-        <thead>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Price</th>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-                <tr>
-                    <td>{{ item['name'] }}</td>
-                    <td>{{ item['quantity'] }}</td>
-                    <td>{{ item['item_total'] }}</td>
-                </tr>
-            {% endfor %}
-                <tr>
-                    <td>TOTAL</td>
-                    <td> {{ size }}</td>
-                    <td>{{ total }}</td>
-                </tr>
-        </tbody>
-    </table>
+    <form method="POST" action="/checkout">
+        <table>
+            <thead>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['quantity'] }}</td>
+                        <td>${{ item['item_total'] }}</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <td>TOTAL</td>
+                        <td> {{ size }}</td>
+                        <td>${{ total }}</td>
+                    </tr>
+            </tbody>
+        </table>
+        <button>Check Out</button>
+    </form>
 {% else %}
     <p>Your cart is empty.</p>
 {% endif %}

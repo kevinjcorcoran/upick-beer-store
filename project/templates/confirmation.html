@@ -1,0 +1,11 @@
+{% extends '_base.html' %} {% block content %}
+
+{% if message %}
+<h3>{{message}}</h3>
+{% endif %}
+
+{% if sub_message %}
+<p>{{sub_message}}</p>
+{% endif %}
+
+{% endblock %}

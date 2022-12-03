@@ -89,4 +89,4 @@ def logout():
     session.pop('email')
     session.pop('name')
 
-    return redirect(url_for('auth.login'))
+    return render_template('confirmation.html', message='Logout successful!')

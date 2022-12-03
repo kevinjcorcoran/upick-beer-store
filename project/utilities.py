@@ -8,3 +8,9 @@ def execute_query(query, one=False):
     mysql.connection.commit()
 
     return result
+
+def clear_tables(sure=False):
+    if sure:
+        execute_query(
+                   
+        )

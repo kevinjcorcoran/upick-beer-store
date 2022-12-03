@@ -14,14 +14,14 @@
             </thead>
             <tbody>
                 {% for beer in beer_data %}
-                <form method="POST", action="/like">
+                <form method="POST" action="/like">
                     <tr>
                         <td>{{ beer['beer_name'] }}</td>
                         <td>{{ beer['style'] }}</td>
-                        <td>{{ beer['abv'] }}</td>
+                        <td>{{ beer['abv'] }}%</td>
                         <td>{{ beer['ibu'] }}</td>
                         <td>{{ beer['stock'] }}</td>
-                        <td>{{ beer['price'] }}</td>
+                        <td>${{ beer['price'] }}</td>
                         <td>
                             <button type="submit" formaction="/like">Like</button>
                             <button type="submit" formaction="/add_to_cart">Add to Cart</button>

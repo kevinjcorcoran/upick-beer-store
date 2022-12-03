@@ -1,8 +1,10 @@
+import json
 import os
+import sys
 import uuid
 from datetime import datetime
 
-from flask import (Blueprint, redirect, render_template, request, session,
+from flask import (Blueprint, flash, redirect, render_template, request, session,
                    url_for)
 
 from .utilities import execute_query
@@ -111,9 +113,16 @@ def account():
             f"WHERE Beer.upc = likes.beer_upc "
             f"AND likes.customer_email = '{customer_email}'"
         )
+        order_history = execute_query(
+            f"SELECT * "
+            f"FROM Purchase "
+            f"WHERE customer_email = '{customer_email}' "
+            F"AND closed = 1"
+        )
         return render_template(
             'account.html', page_title='Account',
-            name=customer_name, user=user, liked_beers=liked_beers
+            name=customer_name, user=user, liked_beers=liked_beers,
+            order_history=order_history
         )
 
     return redirect(url_for('auth.login'))
@@ -179,7 +188,8 @@ def add_to_cart():
             execute_query(
                 f"UPDATE Purchase_Item "
                 f"SET quantity = quantity + 1 "
-                f"WHERE Purchase_Item.purchase_id = '{cart_id}'"
+                f"WHERE purchase_id = '{cart_id}' "
+                f"AND beer_upc = {item}"
             )
 
         execute_query(
@@ -200,7 +210,8 @@ def cart():
     if session.get('loggedin'):
         customer_email = session.get('email')
         cart = execute_query(
-            f"SELECT * FROM Purchase "
+            f"SELECT * "
+            f"FROM Purchase "
             f"WHERE closed = 0 "
             f"AND customer_email = '{customer_email}'", True
         )
@@ -220,16 +231,17 @@ def cart():
             )
 
         cart_id = cart['id']
-
+        total = cart['total']
         cart_items = execute_query(
-            f"SELECT B.beer_name AS 'name', P.quantity AS 'quantity', "
-                f"B.price * P.quantity AS 'item_total' "
+            f"SELECT B.beer_name AS 'name', "
+                f"P.quantity AS 'quantity', "
+                f"B.price * P.quantity AS 'item_total', "
+                f"P.purchase_id AS 'purchase_id', "
+                f"B.upc AS 'upc' "
             f"FROM Beer B, Purchase_Item P "
             f"WHERE P.purchase_id = '{cart_id}' "
             f"AND B.upc = P.beer_upc"
         )
-        
-        total = cart['total']
 
         size = 0
         for item in cart_items:
@@ -241,3 +253,72 @@ def cart():
         )
 
     return redirect(url_for('auth.login'))
+
+
+@main.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    '''Query the user's cart and items if they are logged in. 
+    Otherwise redirect to login.'''
+    customer_email = session.get('email')
+    cart = execute_query(
+        f"SELECT * "
+        f"FROM Purchase "
+        f"WHERE closed = 0 "
+        f"AND customer_email = '{customer_email}'", True
+    )
+    if not cart:
+        # Crete a new cart if the user doesn't have one open
+        cart_id = uuid.uuid1()
+        execute_query(
+            f"INSERT INTO Purchase VALUES("
+            f"'{cart_id}', '{customer_email}', 0, "
+            f"'{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}', 0)"
+        )
+        cart = execute_query(
+            f"SELECT * "
+            f"FROM Purchase "
+            f"WHERE closed = 0 "
+            f"AND customer_email = '{customer_email}'", True
+        )
+
+    cart_id = cart['id']
+    total = cart['total']
+    cart_items = execute_query(
+        f"SELECT B.beer_name AS 'name', "
+            f"P.quantity AS 'quantity', "
+            f"B.price * P.quantity AS 'item_total', "
+            f"P.purchase_id AS 'purchase_id', "
+            f"B.upc AS 'upc' "
+        f"FROM Beer B, Purchase_Item P "
+        f"WHERE P.purchase_id = '{cart_id}' "
+        f"AND B.upc = P.beer_upc"
+    )
+
+    for item in cart_items:
+        try:
+            execute_query(
+                f"UPDATE Beer "
+                f"SET stock = stock - {item.get('quantity')} "
+                f"WHERE upc = {int(item.get('upc'))}"
+            )
+        except:
+            stock = execute_query(
+                f"SELECT stock "
+                f"FROM Beer "
+                f"WHERE upc = {item.get('upc')}"
+            )['stock']
+            flash(f"Too many {item.get('name')} in cart. Only {stock} in stock.")
+
+            return redirect(url_for('main.cart'))
+
+    # Set the Purchase as closed
+    execute_query(
+        f"UPDATE Purchase "
+        f"SET closed = 1 "
+        f"WHERE id = '{cart_id}'"
+    )
+
+    return render_template(
+        'confirmation.html', message='Thanks for your order!',
+         sub_message=f'Order Number: {cart_id}'
+    )

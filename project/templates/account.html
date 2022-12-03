@@ -5,11 +5,35 @@
 <p>Email: {{ user['email']}}</p>
 <p>Favorite Style: {{ user['favorite_style'] }}</p>
 <h3>Liked Beers:</h3>
+
 {% for beer in liked_beers %}
     <p>{{ beer['beer_name'] }}</p>
 {% else %}
     <p>You haven't liked any beers yet!</p>
 {% endfor %}    
+
+<h3>Order History</h3>
+{% if order_history %}
+<table>
+    <thead>
+        <th>Order Number</th>
+        <th>Order Date</th>
+        <th>Total</th>
+    </thead>
+    <tbody>
+        {% for order in order_history %}
+            <tr>
+                <td>{{ order['id'] }}</td>
+                <td>{{ order['last_edit'] }}</td>
+                <td>${{ order['total'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>You haven't made any purchases yet!</p>
+{% endif %}
+
 <form method="POST" action="/logout">
     <button>Logout</button>
 </form>
