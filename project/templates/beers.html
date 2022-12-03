@@ -23,8 +23,12 @@
                         <td>{{ beer['stock'] }}</td>
                         <td>${{ beer['price'] }}</td>
                         <td>
+                            {% if session['loggedin'] %}
                             <button type="submit" formaction="/like">Like</button>
                             <button type="submit" formaction="/add_to_cart">Add to Cart</button>
+                            {% else %}
+                            Login/Sign up to 'Like' and 'Add to cart'!
+                            {% endif %}
                         </td>
                         <input type='hidden' name='beer_upc' value="{{ beer['upc'] }}">
                     </tr>
