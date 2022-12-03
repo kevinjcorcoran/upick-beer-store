@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<!-- from main.py -->
-		<title>UPick: {{page_title}}</title>
-		<!--yaml uses /s as static url-->
-		<link rel="stylesheet" href="/static/styles.css" />
-        <link rel="icon" href="/static/UPIckLogo.png" />
 
-        <!--GOOGLE FONTS-->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Corben&display=swap" rel="stylesheet">
+<head>
+    <!-- from main.py -->
+    <title>UPick: {{page_title}}</title>
+    <!--yaml uses /s as static url-->
+    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="icon" href="/static/UPIckLogo.png" />
 
-	</head>
-	<body>
-        <header class="header">
-            <img class="logo" src="/static/UPIckLogo.png" alt="UPick Logo">
-            <h1>UPick Beer Store</h1>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('main.beers') }}">Beers</a></li>
-                    <li><a href="{{ url_for('main.breweries') }}">Breweries</a></li>
-                    <li><a href="{{ url_for('main.styles') }}">Styles</a></li>
-                    {% if not session.get('loggedin') %}
-                        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                        <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('main.account') }}">Account</a></li>
-                    {% endif %}
-                    <li><a href="cart.html">Cart</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="app-body">
-            <!--content from templates-->
-            {% block content %}{% endblock %}
-        </div>
-	</body>
+    <!--GOOGLE FONTS-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Corben&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <header class="header">
+        <img class="logo" src="/static/UPIckLogo.png" alt="UPick Logo">
+        <h1>UPick Beer Store</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li><a href="{{ url_for('main.beers') }}">Beers</a></li>
+                <li><a href="{{ url_for('main.breweries') }}">Breweries</a></li>
+                <li><a href="{{ url_for('main.styles') }}">Styles</a></li>
+                {% if not session.get('loggedin') %}
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
+                {% else %}
+                <li><a href="{{ url_for('main.account') }}">Account</a></li>
+                {% endif %}
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="app-body">
+        <!--content from templates-->
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
 </html>

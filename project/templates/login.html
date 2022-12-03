@@ -5,16 +5,16 @@
     <div class="input-box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div>
-                {{ messages[0] }}
-            </div>
+        <div>
+            {{ messages[0] }}
+        </div>
         {% endif %}
         {% endwith %}
         <form method="POST" action="/login">
             <input class='input-item' type="email" name="email" placeholder="Your Email" autofocus="" required>
 
             <input class='input-item' type="password" name="password" placeholder="Your Password" required>
-            
+
             <label>
                 <input type="checkbox" name="remember">
                 Remember me

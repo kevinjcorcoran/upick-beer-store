@@ -34,15 +34,33 @@ nav {
 }
 
 table {
-    border: 1px solid;
     border-collapse: collapse;
     table-layout: auto;
+    width: fit-content;
 }
 
-th, td {
-    border: 1px solid;
+td {
+    text-align: left;
     border-collapse: collapse;
-    padding: 0px 10px 0px 10px;
+    padding: 0px 15px 5px 15px;
+}
+
+th {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    border-collapse: collapse;
+    padding: 0px 15px 5px 15px;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+    margin:0 5px 0 5px;
 }
 
 .logo {
@@ -81,7 +99,7 @@ th, td {
 .app-body {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     margin: 10px 40px 10px 40px;
 }
 

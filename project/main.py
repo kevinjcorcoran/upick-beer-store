@@ -133,6 +133,7 @@ def account():
 def like():
     '''Process a like request if a user is logged in. 
     Otherwise redirect to login.'''
+    print(request.form, sys.stderr)
     liked_beer = request.form.get('beer_upc')
     if session.get('loggedin'):
         execute_query(
@@ -313,6 +314,7 @@ def checkout():
 @main.route('/inc_quantity', methods=['GET', 'POST'])
 def inc_quantity():
     '''Increase the quantity of an item in the cart.'''
+    print(request.form, sys.stderr)
     beer_upc = request.form.get('beer_upc')
     purchase_id = request.form.get('purchase_id')
     beer_price = request.form.get('beer_price')
